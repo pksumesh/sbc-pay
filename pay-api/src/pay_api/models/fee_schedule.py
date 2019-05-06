@@ -15,8 +15,7 @@
 
 from datetime import date, datetime
 
-from sqlalchemy import ForeignKey, func
-from sqlalchemy.exc import OperationalError, ResourceClosedError
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 
 from .corp_type import CorpType
@@ -66,6 +65,11 @@ class FeeSchedule(db.Model):
             fee_schedule = query.one_or_none()
 
         return fee_schedule
+
+    def save(self):
+        """Save fee schedule."""
+        db.session.add(self)
+        db.session.commit()
 
 
 class FeeScheduleSchema(ma.ModelSchema):

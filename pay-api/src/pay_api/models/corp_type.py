@@ -13,8 +13,6 @@
 # limitations under the License.
 """Model to handle all operations related to Corp type master data."""
 
-from sqlalchemy.exc import OperationalError, ResourceClosedError
-
 from .db import db, ma
 
 
@@ -27,6 +25,17 @@ Corp types are different types of corporation the payment system supports
 
     corp_type_code = db.Column(db.String(10), primary_key=True)
     corp_type_description = db.Column('corp_type_description', db.String(200))
+
+    @classmethod
+    def find_by_corp_type_code(cls, code):
+        """Given a corp_type_code, this will return corp type details."""
+        corp_type = cls.query.filter_by(corp_type_code=code).one_or_none()
+        return corp_type
+
+    def save(self):
+        """Save fee code."""
+        db.session.add(self)
+        db.session.commit()
 
 
 class CorpTypeSchema(ma.ModelSchema):

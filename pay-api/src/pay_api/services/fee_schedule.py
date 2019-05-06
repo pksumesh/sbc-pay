@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Service to manage Fee Calculation."""
-from typing import Any, Dict
 
 from flask import current_app
 
@@ -21,7 +20,7 @@ from pay_api.models import FeeSchedule as FeeScheduleModel
 from pay_api.utils.errors import Error
 
 
-class FeeService:
+class FeeSchedule:
     """Service to manage Fee related operations."""
 
     @staticmethod

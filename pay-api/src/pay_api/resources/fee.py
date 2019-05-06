@@ -14,14 +14,15 @@
 """Resource for Fee Calculation endpoints."""
 from datetime import datetime
 
-from flask import current_app, jsonify, request
+from flask import jsonify, request
 from flask_restplus import Namespace, Resource, cors
 
+from pay_api import jwt as _jwt
 from pay_api.exceptions import BusinessException
-from pay_api.services.fee import FeeService
+from pay_api.services.fee_schedule import FeeSchedule
 from pay_api.utils.constants import DEFAULT_JURISDICTION
 from pay_api.utils.util import cors_preflight
-from pay_api import jwt as _jwt
+
 
 API = Namespace('fees', description='Payment System - Fees')
 
@@ -40,11 +41,11 @@ class Fee(Resource):
         jurisdiction = request.args.get('jurisdiction', DEFAULT_JURISDICTION)
         priority = request.args.get('priority', False)
         try:
-            response, status = FeeService.calculate_fees(corp_type=corp_type,
-                                                         filing_type_code=filing_type_code,
-                                                         valid_date=date,
-                                                         jurisdiction=jurisdiction,
-                                                         priority=priority)
-        except BusinessException as be:
-            response, status = {'code': be.code, 'message': be.message}, be.status
+            response, status = FeeSchedule.calculate_fees(corp_type=corp_type,
+                                                          filing_type_code=filing_type_code,
+                                                          valid_date=date,
+                                                          jurisdiction=jurisdiction,
+                                                          priority=priority)
+        except BusinessException as exception:
+            response, status = {'code': exception.code, 'message': exception.message}, exception.status
         return jsonify(response), status
