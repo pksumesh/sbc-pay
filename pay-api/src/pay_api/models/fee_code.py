@@ -24,7 +24,7 @@ Fee Codes holds the fee amount
     __tablename__ = 'fee_code'
 
     fee_code = db.Column(db.String(10), primary_key=True)
-    amount = db.Column('amount', db.Integer)
+    amount = db.Column('amount', db.Integer, nullable=False)
 
     @classmethod
     def find_by_fee_code(cls, code):

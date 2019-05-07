@@ -24,7 +24,7 @@ Corp types are different types of corporation the payment system supports
     __tablename__ = 'corp_type'
 
     corp_type_code = db.Column(db.String(10), primary_key=True)
-    corp_type_description = db.Column('corp_type_description', db.String(200))
+    corp_type_description = db.Column('corp_type_description', db.String(200), nullable=False)
 
     @classmethod
     def find_by_corp_type_code(cls, code):

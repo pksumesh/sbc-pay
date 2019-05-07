@@ -41,11 +41,12 @@ class Fee(Resource):
         jurisdiction = request.args.get('jurisdiction', DEFAULT_JURISDICTION)
         priority = request.args.get('priority', False)
         try:
-            response, status = FeeSchedule.calculate_fees(corp_type=corp_type,
-                                                          filing_type_code=filing_type_code,
-                                                          valid_date=date,
-                                                          jurisdiction=jurisdiction,
-                                                          priority=priority)
+            response, status = FeeSchedule.get_fees_by_corp_type_and_filing_type(
+                corp_type=corp_type,
+                filing_type_code=filing_type_code,
+                valid_date=date,
+                jurisdiction=jurisdiction,
+                priority=priority).asdict(), 200
         except BusinessException as exception:
             response, status = {'code': exception.code, 'message': exception.message}, exception.status
         return jsonify(response), status

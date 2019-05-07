@@ -34,20 +34,20 @@ class FeeSchedule(db.Model):
         db.UniqueConstraint('filing_type_code', 'corp_type_code', 'fee_code', name='unique_fee_sched_1'),
     )
 
-    filing_schedule_id = db.Column(db.Integer, primary_key=True)
+    fee_schedule_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     filing_type_code = db.Column(db.String(10), ForeignKey("filing_type.filing_type_code"), nullable=False)
     corp_type_code = db.Column(db.String(10), ForeignKey("corp_type.corp_type_code"), nullable=False)
     fee_code = db.Column(db.String(10), ForeignKey("fee_code.fee_code"), nullable=False)
     fee_start_date = db.Column('fee_start_date', db.Date, default=date.today(), nullable=False)
-    fee_end_date = db.Column('fee_end_date', db.Date, default=None)
+    fee_end_date = db.Column('fee_end_date', db.Date, default=None, nullable=True)
 
     filing_type = relationship(FilingType, foreign_keys=[filing_type_code], lazy="joined", innerjoin=True)
     corp_type = relationship(CorpType, foreign_keys=[corp_type_code], lazy="joined", innerjoin=True)
     fee = relationship(FeeCode, foreign_keys=[fee_code], lazy="joined", innerjoin=True)
 
     @classmethod
-    def find_by_filing_type_and_corp_type(cls, corp_type_code: str = None,
-                                          filing_type_code: str = None,
+    def find_by_filing_type_and_corp_type(cls, corp_type_code: str,
+                                          filing_type_code: str,
                                           valid_date: datetime = None,
                                           jurisdiction: str = None,
                                           priority: bool = False

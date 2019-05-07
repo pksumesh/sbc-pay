@@ -24,7 +24,7 @@ class FilingType(db.Model):
     __tablename__ = 'filing_type'
 
     filing_type_code = db.Column(db.String(10), primary_key=True)
-    filing_description = db.Column('filing_description', db.String(200))
+    filing_description = db.Column('filing_description', db.String(200), nullable=False)
 
     @classmethod
     def find_by_filing_type_code(cls, code):
