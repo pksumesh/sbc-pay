@@ -18,7 +18,8 @@ from .db import db, ma
 
 class CorpType(db.Model):
     """This class manages all of the base data about a Corp Type.
-Corp types are different types of corporation the payment system supports
+
+    Corp types are different types of corporation the payment system supports
     """
 
     __tablename__ = 'corp_type'
@@ -43,4 +44,5 @@ class CorpTypeSchema(ma.ModelSchema):
 
     class Meta:  # pylint: disable=too-few-public-methods
         """Returns all the fields from the SQLAlchemy class."""
+
         model = CorpType

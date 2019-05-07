@@ -18,7 +18,8 @@ from .db import db, ma
 
 class FeeCode(db.Model):
     """This class manages all of the base data about a Fee Code.
-Fee Codes holds the fee amount
+
+    Fee Codes holds the fee amount
     """
 
     __tablename__ = 'fee_code'
@@ -43,4 +44,5 @@ class FeeCodeSchema(ma.ModelSchema):
 
     class Meta:  # pylint: disable=too-few-public-methods
         """Returns all the fields from the SQLAlchemy class."""
+
         model = FeeCode

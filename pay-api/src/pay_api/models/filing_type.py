@@ -18,6 +18,7 @@ from .db import db, ma
 
 class FilingType(db.Model):
     """This class manages all of the base data about a filing type.
+
     Filing type indicates the filing operation on the entity
     """
 
@@ -43,4 +44,5 @@ class FilingTypeSchema(ma.ModelSchema):
 
     class Meta:  # pylint: disable=too-few-public-methods
         """Returns all the fields from the SQLAlchemy class."""
+
         model = FilingType

@@ -11,7 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Common setup and fixtures for the pytest suite used by this service."""
+
+"""Common setup and fixtures for the py-test suite used by this service."""
+
 import pytest
 from flask_migrate import Migrate, upgrade
 from sqlalchemy import event, text

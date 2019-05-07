@@ -22,7 +22,7 @@ from pay_api.exceptions import BusinessException
 from pay_api.services.fee_schedule import FeeSchedule
 from pay_api.utils.constants import DEFAULT_JURISDICTION
 from pay_api.utils.util import cors_preflight
-
+from pay_api.utils.roles import Role
 
 API = Namespace('fees', description='Payment System - Fees')
 
@@ -34,14 +34,14 @@ class Fee(Resource):
 
     @staticmethod
     @cors.crossdomain(origin='*')
-    @_jwt.has_one_of_roles(['basic', 'premium'])
+    @_jwt.has_one_of_roles([Role.BASIC.value, Role.PREMIUM.value])
     def get(corp_type, filing_type_code):
         """Calculate the fee for the filing using the corp type/filing type and return fee."""
         date = request.args.get('date', datetime.today().strftime('%Y-%m-%d'))
         jurisdiction = request.args.get('jurisdiction', DEFAULT_JURISDICTION)
         priority = request.args.get('priority', False)
         try:
-            response, status = FeeSchedule.get_fees_by_corp_type_and_filing_type(
+            response, status = FeeSchedule.find_by_corp_type_and_filing_type(
                 corp_type=corp_type,
                 filing_type_code=filing_type_code,
                 valid_date=date,

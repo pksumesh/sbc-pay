@@ -17,8 +17,9 @@
 Test-Suite to ensure that the FeeSchedule Class is working as expected.
 """
 
-from pay_api.models import FeeSchedule, FilingType, CorpType, FeeCode
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
+
+from pay_api.models import CorpType, FeeCode, FeeSchedule, FilingType
 
 
 def factory_corp_type(corp_type_code: str, corp_description: str):
@@ -36,7 +37,7 @@ def factory_feecode(fee_code: str, amount: int):
 def factory_filing_type(code: str, description: str):
     """Return a valid FilingType object."""
     return FilingType(filing_type_code=code,
-                   filing_description=description)
+                      filing_description=description)
 
 
 def factory_fee_schedule(filing_type_code: str,
@@ -57,10 +58,10 @@ def test_fee_schedule(session):
 
     Start with a blank database.
     """
-    fee_code = factory_feecode('EN101', 100)
-    corp_type = factory_corp_type('CP', 'Cooperative')
-    filing_type = factory_filing_type('OTANN', 'Annual Report')
-    fee_schedule = factory_fee_schedule('OTANN', 'CP', 'EN101', date.today(), None)
+    fee_code = factory_feecode('EN000X', 100)
+    corp_type = factory_corp_type('XX', 'Cooperative')
+    filing_type = factory_filing_type('OTANNX', 'Annual Report')
+    fee_schedule = factory_fee_schedule('OTANNX', 'XX', 'EN000X', date.today(), None)
     session.add(fee_code)
     session.add(corp_type)
     session.add(filing_type)
@@ -75,17 +76,17 @@ def test_fee_schedule_find_by_corp_type_and_filing_type(session):
 
     Start with a blank database.
     """
-    fee_code = factory_feecode('EN101', 100)
-    corp_type = factory_corp_type('CP', 'Cooperative')
-    filing_type = factory_filing_type('OTANN', 'Annual Report')
-    fee_schedule = factory_fee_schedule('OTANN', 'CP', 'EN101', date.today(), None)
+    fee_code = factory_feecode('EN000X', 100)
+    corp_type = factory_corp_type('XX', 'Cooperative')
+    filing_type = factory_filing_type('OTANNX', 'Annual Report')
+    fee_schedule = factory_fee_schedule('OTANNX', 'XX', 'EN000X', date.today(), None)
     session.add(fee_code)
     session.add(corp_type)
     session.add(filing_type)
     session.add(fee_schedule)
     session.commit()
 
-    fee_schedule = fee_schedule.find_by_filing_type_and_corp_type('CP', 'OTANN')
+    fee_schedule = fee_schedule.find_by_filing_type_and_corp_type('XX', 'OTANNX')
 
     assert fee_schedule.fee.amount == 100
 
@@ -95,17 +96,17 @@ def test_fee_schedule_find_by_corp_type_and_filing_type_invalid(session):
 
     Start with a blank database.
     """
-    fee_code = factory_feecode('EN101', 100)
-    corp_type = factory_corp_type('CP', 'Cooperative')
-    filing_type = factory_filing_type('OTANN', 'Annual Report')
-    fee_schedule = factory_fee_schedule('OTANN', 'CP', 'EN101', date.today(), None)
+    fee_code = factory_feecode('EN000X', 100)
+    corp_type = factory_corp_type('XX', 'Cooperative')
+    filing_type = factory_filing_type('OTANNX', 'Annual Report')
+    fee_schedule = factory_fee_schedule('OTANNX', 'XX', 'EN000X', date.today(), None)
     session.add(fee_code)
     session.add(corp_type)
     session.add(filing_type)
     session.add(fee_schedule)
     session.commit()
 
-    fee_schedule = fee_schedule.find_by_filing_type_and_corp_type('CP', 'OTADD')
+    fee_schedule = fee_schedule.find_by_filing_type_and_corp_type('XX', 'OTADDX')
 
     assert fee_schedule is None
 
@@ -115,17 +116,17 @@ def test_fee_schedule_find_by_corp_type_and_filing_type_valid_date(session):
 
     Start with a blank database.
     """
-    fee_code = factory_feecode('EN101', 100)
-    corp_type = factory_corp_type('CP', 'Cooperative')
-    filing_type = factory_filing_type('OTANN', 'Annual Report')
-    fee_schedule = factory_fee_schedule('OTANN', 'CP', 'EN101', date.today(), None)
+    fee_code = factory_feecode('EN000X', 100)
+    corp_type = factory_corp_type('XX', 'Cooperative')
+    filing_type = factory_filing_type('OTANNX', 'Annual Report')
+    fee_schedule = factory_fee_schedule('OTANNX', 'XX', 'EN000X', date.today(), None)
     session.add(fee_code)
     session.add(corp_type)
     session.add(filing_type)
     session.add(fee_schedule)
     session.commit()
 
-    fee_schedule = fee_schedule.find_by_filing_type_and_corp_type('CP', 'OTANN', date.today())
+    fee_schedule = fee_schedule.find_by_filing_type_and_corp_type('XX', 'OTANNX', date.today())
 
     assert fee_schedule.fee.amount == 100
 
@@ -136,17 +137,17 @@ def test_fee_schedule_find_by_corp_type_and_filing_type_invalid_date(session):
     Start with a blank database.
     """
     now = date.today()
-    fee_code = factory_feecode('EN101', 100)
-    corp_type = factory_corp_type('CP', 'Cooperative')
-    filing_type = factory_filing_type('OTANN', 'Annual Report')
-    fee_schedule = factory_fee_schedule('OTANN', 'CP', 'EN101', now, None)
+    fee_code = factory_feecode('EN000X', 100)
+    corp_type = factory_corp_type('XX', 'Cooperative')
+    filing_type = factory_filing_type('OTANNX', 'Annual Report')
+    fee_schedule = factory_fee_schedule('OTANNX', 'XX', 'EN000X', now, None)
     session.add(fee_code)
     session.add(corp_type)
     session.add(filing_type)
     session.add(fee_schedule)
     session.commit()
 
-    fee_schedule = fee_schedule.find_by_filing_type_and_corp_type('CP', 'OTANN', date.today() - timedelta(1))
+    fee_schedule = fee_schedule.find_by_filing_type_and_corp_type('XX', 'OTANNX', date.today() - timedelta(1))
 
     assert fee_schedule is None
 
@@ -157,10 +158,10 @@ def test_fee_schedule_find_by_none_corp_type_and_filing_type(session):
     Start with a blank database.
     """
     now = date.today()
-    fee_code = factory_feecode('EN101', 100)
-    corp_type = factory_corp_type('CP', 'Cooperative')
-    filing_type = factory_filing_type('OTANN', 'Annual Report')
-    fee_schedule = factory_fee_schedule('OTANN', 'CP', 'EN101', now, None)
+    fee_code = factory_feecode('EN000X', 100)
+    corp_type = factory_corp_type('XX', 'Cooperative')
+    filing_type = factory_filing_type('OTANNX', 'Annual Report')
+    fee_schedule = factory_fee_schedule('OTANNX', 'XX', 'EN000X', now, None)
     session.add(fee_code)
     session.add(corp_type)
     session.add(filing_type)

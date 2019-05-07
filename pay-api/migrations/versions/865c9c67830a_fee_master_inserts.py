@@ -5,11 +5,13 @@ Revises: 0328c7f2abbc
 Create Date: 2019-05-07 11:43:13.598460
 
 """
-from alembic import op
-import sqlalchemy as sa
-from sqlalchemy.sql import table, column
-from sqlalchemy import String, Integer, Date
 from datetime import date
+
+import sqlalchemy as sa
+from alembic import op
+from sqlalchemy import Date, Integer, String
+from sqlalchemy.sql import column, table
+
 
 # revision identifiers, used by Alembic.
 revision = '865c9c67830a'

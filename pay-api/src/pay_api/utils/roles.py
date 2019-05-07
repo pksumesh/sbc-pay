@@ -11,20 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Error definitions."""
+"""Role definitions."""
 from enum import Enum
-from http import HTTPStatus
 
 
-class Error(Enum):
-    """Error Codes."""
+class Role(Enum):
+    """User Role."""
 
-    PAY001 = 'Invalid Corp Type or Filing Type', HTTPStatus.BAD_REQUEST
-    PAY002 = 'No matching record found for Corp Type and Filing Type', HTTPStatus.BAD_REQUEST
-
-    def __new__(cls, message, status):
-        """Attributes for the enum."""
-        obj = object.__new__(cls)
-        obj.message = message
-        obj.status = status
-        return obj
+    BASIC = 'basic'
+    PREMIUM = 'premium'
+    STAFF = 'staff'
+    VIEWER = 'viewer'
+    EDITOR = 'editor'

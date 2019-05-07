@@ -13,13 +13,13 @@
 # limitations under the License.
 """Service to manage Fee Calculation."""
 
+from datetime import date
+
 from flask import current_app
 
 from pay_api.exceptions import BusinessException
 from pay_api.models import FeeSchedule as FeeScheduleModel
 from pay_api.utils.errors import Error
-from datetime import date
-from pay_api.models import FeeSchedule as FeeScheduleModel
 
 
 class FeeSchedule:  # pylint: disable=too-many-instance-attributes
@@ -34,6 +34,8 @@ class FeeSchedule:  # pylint: disable=too-many-instance-attributes
         self._fee_code: str = None
         self._fee_start_date: date = None
         self._fee_end_date: date = None
+        self._fee_amount: int = None
+        self._filing_type: str = None
 
     @property
     def _dao(self):
@@ -50,8 +52,8 @@ class FeeSchedule:  # pylint: disable=too-many-instance-attributes
         self.fee_code: str = self._dao.fee_code
         self.fee_start_date: date = self._dao.fee_start_date
         self.fee_end_date: date = self._dao.fee_end_date
-        self.fee_amount: int = self._dao.fee.amount
-        self.filing_type: str = self._dao.filing_type.filing_description
+        self._fee_amount: int = self._dao.fee.amount
+        self._filing_type: str = self._dao.filing_type.filing_description
 
     @property
     def fee_schedule_id(self):
@@ -120,22 +122,19 @@ class FeeSchedule:  # pylint: disable=too-many-instance-attributes
         self._dao.fee_end_date = value
 
     def asdict(self):
-        """Return the User as a python dict.
-        None fields are not included in the dict.
-        """
+        """Return the User as a python dict."""
         d = {
-            'filing_type': self.filing_type,
+            'filing_type': self._filing_type,
             'filing_type_code': self.filing_type_code,
-            'filing_fees': self.fee_amount,
+            'filing_fees': self._fee_amount,
             'service_fees': 0,  # TODO Populate Service fees here
             'processing_fees': 0,  # TODO Populate Processing fees here
-            'tax':  # TODO Populate Tax details here
-                {
-                    'gst': 0,
-                    'pst': 0
-                }
+            'tax': {
+                # TODO Populate Tax details here
+                'gst': 0,
+                'pst': 0
+            }
         }
-
         return d
 
     def save(self):
@@ -143,8 +142,11 @@ class FeeSchedule:  # pylint: disable=too-many-instance-attributes
         self._dao.save()
 
     @classmethod
-    def get_fees_by_corp_type_and_filing_type(cls, corp_type: str, filing_type_code: str,
-                                              valid_date: date, jurisdiction: str, priority: bool):
+    def find_by_corp_type_and_filing_type(cls, corp_type: str,
+                                          filing_type_code: str,
+                                          valid_date: date,
+                                          jurisdiction: str,
+                                          priority: bool):
         """Calculate fees for the filing by using the arguments."""
         current_app.logger.debug('<get_fees_by_corp_type_and_filing_type')
         if not corp_type and not filing_type_code:

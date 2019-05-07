@@ -16,8 +16,6 @@
 
 Test-Suite to ensure that the FeeCode Class is working as expected.
 """
-import datetime
-
 from pay_api.models import FeeCode
 
 
@@ -32,7 +30,7 @@ def test_feecode(session):
 
     Start with a blank database.
     """
-    feecode = factory_feecode('EN101', 100)
+    feecode = factory_feecode('EN000X', 100)
     feecode.save()
 
     assert feecode.fee_code is not None
@@ -40,19 +38,19 @@ def test_feecode(session):
 
 def test_feecode_find_by_fee_code(session):
     """Assert that the feecode can be found by code."""
-    feecode = factory_feecode('EN101', 100)
+    feecode = factory_feecode('EN000X', 100)
     session.add(feecode)
     session.commit()
 
-    b = FeeCode.find_by_fee_code('EN101')
+    b = FeeCode.find_by_fee_code('EN000X')
     assert b is not None
 
 
 def test_feecode_find_by_invalid_fee_code(session):
-    """Assert that the feecode can not be found, with invalid code"""
-    feecode = factory_feecode('EN101', 100)
+    """Assert that the feecode can not be found, with invalid code."""
+    feecode = factory_feecode('EN000X', 100)
     session.add(feecode)
     session.commit()
 
-    b = FeeCode.find_by_fee_code('EN102')
+    b = FeeCode.find_by_fee_code('EN000Y')
     assert b is None

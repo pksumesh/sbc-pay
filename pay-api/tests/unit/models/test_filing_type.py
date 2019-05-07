@@ -23,7 +23,7 @@ from pay_api.models import FilingType
 def factory_filing_type(code: str, description: str):
     """Return a valid FilingType object."""
     return FilingType(filing_type_code=code,
-                   filing_description=description)
+                      filing_description=description)
 
 
 def test_filing_type(session):
@@ -31,7 +31,7 @@ def test_filing_type(session):
 
     Start with a blank database.
     """
-    filing_type = factory_filing_type('OTADD', 'Annual Report')
+    filing_type = factory_filing_type('OTADDX', 'Annual Report')
     filing_type.save()
 
     assert filing_type.filing_type_code is not None
@@ -39,19 +39,19 @@ def test_filing_type(session):
 
 def test_filing_type_find_by_code(session):
     """Assert that the filing type can be found by code."""
-    filing_type = factory_filing_type('OTADD', 'Annual Report')
+    filing_type = factory_filing_type('OTADDX', 'Annual Report')
     session.add(filing_type)
     session.commit()
 
-    b = FilingType.find_by_filing_type_code('OTADD')
+    b = FilingType.find_by_filing_type_code('OTADDX')
     assert b is not None
 
 
 def test_filing_type_find_by_invalid_fee_code(session):
-    """Assert that the filing type can not be found, with invalid code"""
-    filing_type = factory_filing_type('OTADD', 'Annual Report')
+    """Assert that the filing type can not be found, with invalid code."""
+    filing_type = factory_filing_type('OTADDX', 'Annual Report')
     session.add(filing_type)
     session.commit()
 
-    b = FilingType.find_by_filing_type_code('OTANN')
+    b = FilingType.find_by_filing_type_code('OTANNX')
     assert b is None
