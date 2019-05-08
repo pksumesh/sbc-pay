@@ -21,8 +21,9 @@ from pay_api import jwt as _jwt
 from pay_api.exceptions import BusinessException
 from pay_api.services.fee_schedule import FeeSchedule
 from pay_api.utils.constants import DEFAULT_JURISDICTION
-from pay_api.utils.util import cors_preflight
 from pay_api.utils.roles import Role
+from pay_api.utils.util import cors_preflight
+
 
 API = Namespace('fees', description='Payment System - Fees')
 

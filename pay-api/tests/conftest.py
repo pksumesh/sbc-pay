@@ -48,7 +48,7 @@ def client(app):  # pylint: disable=redefined-outer-name
 
 @pytest.fixture(scope='session')
 def jwt(app):
-    """Returns session-wide jwt manager."""
+    """Return session-wide jwt manager."""
     return _jwt
 
 

@@ -16,36 +16,35 @@
 
 Test-Suite to ensure that the /fees endpoint is working as expected.
 """
-import json
-from pay_api.models import CorpType, FeeCode, FilingType, FeeSchedule
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
+
+from pay_api.models import CorpType, FeeCode, FeeSchedule, FilingType
 from pay_api.utils.roles import Role
+from tests.utilities.schema_assertions import assert_valid_schema
+from pay_api.schemas import utils as schema_utils
 
 token_header = {
-    "alg": "RS256",
-    "typ": "JWT",
-    "kid": "sbc-auth-cron-job"
+    'alg': 'RS256',
+    'typ': 'JWT',
+    'kid': 'sbc-auth-cron-job'
 }
 
-def get_claims(role:str = Role.BASIC.value):
+
+def get_claims(role: str = Role.BASIC.value):
+    """Return the claim with the role param."""
     claim = {
-        "jti": "a50fafa4-c4d6-4a9b-9e51-1e5e0d102878",
-        "exp": 1557273180,
-        "nbf": 0,
-        "iat": 1557269580,
-        "iss": "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/fcf0kpqr",
-        "aud": "sbc-auth-web",
-        "sub": "15099883-3c3f-4b4c-a124-a1824d6cba84",
-        "typ": "Bearer",
-        "azp": "sbc-auth-web",
-        "auth_time": 0,
-        "session_state": "f1d8636b-e4a9-4f75-a204-6b3e2d395fb1",
-        "acr": "1",
-        "realm_access":
+        'jti': 'a50fafa4-c4d6-4a9b-9e51-1e5e0d102878',
+        "exp": 31531718745,
+        "iat": 1531718745,
+        'iss': 'https://sso-dev.pathfinder.gov.bc.ca/auth/realms/fcf0kpqr',
+        'aud': 'sbc-auth-web',
+        'sub': '15099883-3c3f-4b4c-a124-a1824d6cba84',
+        'typ': 'Bearer',
+        'realm_access':
             {
-                "roles":
+                'roles':
                     [
-                        "{}".format(role)
+                        '{}'.format(role)
                     ]
             }
     }
@@ -64,6 +63,7 @@ def test_fees_with_corp_type_and_filing_type(session, client, jwt, app):
         factory_fee_model('XXX', 100))
     rv = client.get(f'/api/v1/fees/{corp_type}/{filing_type_code}', headers=headers)
     assert rv.status_code == 200
+    assert schema_utils.validate_schema(rv.json, 'fees.json')
 
 
 def test_fees_with_corp_type_and_filing_type_with_valid_start_date(session, client, jwt, app):
@@ -82,6 +82,7 @@ def test_fees_with_corp_type_and_filing_type_with_valid_start_date(session, clie
         now - timedelta(1))
     rv = client.get(f'/api/v1/fees/{corp_type}/{filing_type_code}?valid_date={now}', headers=headers)
     assert rv.status_code == 200
+    assert schema_utils.validate_schema(rv.json, 'fees.json')
 
 
 def test_fees_with_corp_type_and_filing_type_with_invalid_start_date(session, client, jwt, app):
@@ -100,6 +101,8 @@ def test_fees_with_corp_type_and_filing_type_with_invalid_start_date(session, cl
         now + timedelta(1))
     rv = client.get(f'/api/v1/fees/{corp_type}/{filing_type_code}?valid_date={now}', headers=headers)
     assert rv.status_code == 400
+    assert schema_utils.validate_schema(rv.json, 'error.json')
+    assert schema_utils.validate_schema(rv.json, 'fees.json')
 
 
 def test_fees_with_corp_type_and_filing_type_with_valid_end_date(session, client, jwt, app):
@@ -119,6 +122,7 @@ def test_fees_with_corp_type_and_filing_type_with_valid_end_date(session, client
         now)
     rv = client.get(f'/api/v1/fees/{corp_type}/{filing_type_code}?valid_date={now}', headers=headers)
     assert rv.status_code == 200
+    assert schema_utils.validate_schema(rv.json, 'fees.json')
 
 
 def test_fees_with_corp_type_and_filing_type_with_invalid_end_date(session, client, jwt, app):
@@ -138,11 +142,13 @@ def test_fees_with_corp_type_and_filing_type_with_invalid_end_date(session, clie
         now - timedelta(1))
     rv = client.get(f'/api/v1/fees/{corp_type}/{filing_type_code}?valid_date={now}', headers=headers)
     assert rv.status_code == 400
+    assert schema_utils.validate_schema(rv.json, 'error.json')
 
 
 def factory_filing_type_model(
         filing_type_code: str,
         filing_description: str = 'TEST'):
+    """Return the filing type model."""
     filing_type = FilingType(filing_type_code=filing_type_code,
                              filing_description=filing_description)
     filing_type.save()
@@ -152,6 +158,7 @@ def factory_filing_type_model(
 def factory_fee_model(
         fee_code: str,
         amount: int):
+    """Return the fee code model."""
     fee_code_master = FeeCode(fee_code=fee_code,
                               amount=amount)
     fee_code_master.save()
@@ -161,6 +168,7 @@ def factory_fee_model(
 def factory_corp_type_model(
         corp_type_code: str,
         corp_type_description: str):
+    """Return the corp type model."""
     corp_type = CorpType(corp_type_code=corp_type_code,
                          corp_type_description=corp_type_description)
     corp_type.save()
@@ -173,6 +181,7 @@ def factory_fee_schedule_model(
         fee_code: FeeCode,
         fee_start_date: date = date.today(),
         fee_end_date: date = None):
+    """Return the fee schedule model."""
     fee_schedule = FeeSchedule(filing_type_code=filing_type.filing_type_code,
                                corp_type_code=corp_type.corp_type_code,
                                fee_code=fee_code.fee_code,
@@ -180,5 +189,3 @@ def factory_fee_schedule_model(
                                fee_end_date=fee_end_date)
     fee_schedule.save()
     return fee_schedule
-
-
