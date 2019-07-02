@@ -53,5 +53,9 @@ class PaymentSystemService(ABC):  # pylint: disable=too-many-instance-attributes
         """Get receipt from payment system."""
 
     @abstractmethod
+    def get_payment_system_url(self):
+        """Return the payment system portal URL for payment."""
+
+    @abstractmethod
     def get_payment_system_code(self):
         """Return the payment system code. E.g, PAYBC, BCOL etc."""
