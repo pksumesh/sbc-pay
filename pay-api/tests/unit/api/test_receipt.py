@@ -83,7 +83,7 @@ def test_receipt_creation(session, client, jwt, app):
                     headers=headers)
 
     filing_data = {
-        'corpNum': 'CP1234',
+        'corpName': 'CP1234',
         'filingDateTime': 'June 27, 2019',
         'fileName': 'director-change'
     }
@@ -108,7 +108,7 @@ def test_receipt_creation_with_invoice(session, client, jwt, app):
     client.put(f'/api/v1/payments/{payment_id}/transactions/{txn_id}?receipt_number={receipt_number}',
                data=None, headers=headers)
     filing_data = {
-        'corpNum': 'CP1234',
+        'corpName': 'CP1234',
         'filingDateTime': 'June 27, 2019',
         'fileName': 'director-change'
     }
