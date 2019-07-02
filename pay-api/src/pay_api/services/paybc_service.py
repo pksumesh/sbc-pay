@@ -15,21 +15,21 @@
 
 import base64
 import datetime
+import urllib.parse
 from typing import Any, Dict, Tuple
 
 from dateutil import parser
 from flask import current_app
 
 from pay_api.services.base_payment_system import PaymentSystemService
-from pay_api.services.payment_account import PaymentAccount
 from pay_api.services.invoice import Invoice
+from pay_api.services.payment_account import PaymentAccount
 from pay_api.utils.constants import (
     DEFAULT_COUNTRY, DEFAULT_JURISDICTION, PAYBC_ADJ_ACTIVITY_NAME, PAYBC_BATCH_SOURCE, PAYBC_CUST_TRX_TYPE,
     PAYBC_LINE_TYPE, PAYBC_MEMO_LINE_NAME, PAYBC_TERM_NAME)
 from pay_api.utils.enums import AuthHeaderType, ContentType, PaymentSystem
 from .oauth_service import OAuthService
 from .payment_line_item import PaymentLineItem
-import urllib.parse
 
 
 class PaybcService(PaymentSystemService, OAuthService):
@@ -40,7 +40,7 @@ class PaybcService(PaymentSystemService, OAuthService):
 
         pay_system_url = current_app.config.get(
             'PAYBC_PORTAL_URL') + f'?inv_number={invoice.invoice_number}&pbc_ref_number={invoice.reference_number}'
-        encoded_return_url = urllib.parse.quote(return_url,'')
+        encoded_return_url = urllib.parse.quote(return_url, '')
         pay_system_url += f'&redirect_uri={encoded_return_url}'
 
         current_app.logger.debug('>get_payment_system_url')

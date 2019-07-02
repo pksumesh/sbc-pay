@@ -160,7 +160,7 @@ class Receipt():  # pylint: disable=too-many-instance-attributes
             template_vars['line_items'].append(
                 {
                     'description': line_item['description'],
-                    'filing_fees': line_item['filing_fees'],
+                    'filing_fees': line_item['total']
                 }
             )
 
