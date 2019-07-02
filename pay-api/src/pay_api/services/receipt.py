@@ -164,6 +164,13 @@ class Receipt():  # pylint: disable=too-many-instance-attributes
                 }
             )
 
+        template_vars['line_items'].append(
+            {
+                'description': 'Total',
+                'filing_fees': invoice_data['total']
+            }
+        )
+
         pdf_response = OAuthService.post(current_app.config.get('REPORT_API_BASE_URL'), '', AuthHeaderType.BEARER,
                                          ContentType.JSON, receipt_dict)
         return pdf_response
