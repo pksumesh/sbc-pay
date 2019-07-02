@@ -32,7 +32,6 @@ from .paybc_invoice import API as PAYBC_INVOICE_API
 from .payment import API as PAY_API
 from .transaction import API as TRANSACTION_API
 
-
 __all__ = ('API_BLUEPRINT', 'OPS_BLUEPRINT')
 
 # This will add the Authorize button to the swagger docs
@@ -73,6 +72,5 @@ API.add_namespace(PAY_API, path='/payments')
 API.add_namespace(FEE_API, path='/fees')
 API.add_namespace(TRANSACTION_API, path='/payments/<int:payment_id>/transactions')
 API.add_namespace(INVOICE_API, path='/payments/<int:payment_id>/invoices')
-
 
 API.add_namespace(INVOICE_RECEIPT_API, path='/payments/<int:payment_id>')

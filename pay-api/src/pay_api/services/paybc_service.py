@@ -26,7 +26,6 @@ from pay_api.utils.constants import (
     DEFAULT_COUNTRY, DEFAULT_JURISDICTION, PAYBC_ADJ_ACTIVITY_NAME, PAYBC_BATCH_SOURCE, PAYBC_CUST_TRX_TYPE,
     PAYBC_LINE_TYPE, PAYBC_MEMO_LINE_NAME, PAYBC_TERM_NAME)
 from pay_api.utils.enums import AuthHeaderType, ContentType, PaymentSystem
-
 from .oauth_service import OAuthService
 from .payment_line_item import PaymentLineItem
 
@@ -142,8 +141,7 @@ class PaybcService(PaymentSystemService, OAuthService):
                     for invoice in expanded_receipt.get('invoices'):
                         if invoice.get('invoice_number') == invoice_number:
                             return receipt.get('receipt_number'), parser.parse(
-                                expanded_receipt.get('receipt_date')), float(
-                                invoice.get('amount_applied'))
+                                expanded_receipt.get('receipt_date')), float(invoice.get('amount_applied'))
 
         if receipt_number:
             receipt_response = self.__get_receipt_by_number(access_token, receipt_url, receipt_number)
