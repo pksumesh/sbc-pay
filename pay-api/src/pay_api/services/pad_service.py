@@ -95,6 +95,13 @@ class PadService(PaymentSystemService, CFSService):
         """Return a static invoice number for direct pay."""
         current_app.logger.debug('<create_invoice_pad_service')
         # Do nothing here as the invoice references are created later.
+        # If the account have credit, deduct the credit amount which will be synced when reconciliation runs.
+        account_credit = payment_account.credit
+        if account_credit and account_credit > 0:
+            account_credit = account_credit - invoice.total
+            if account_credit < 0:
+                account_credit = 0
+        payment_account.credit = account_credit
 
     def complete_post_invoice(self, invoice: Invoice, invoice_reference: InvoiceReference) -> None:
         """Complete any post invoice activities if needed."""

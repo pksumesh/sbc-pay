@@ -181,6 +181,10 @@ class RefundService:  # pylint: disable=too-many-instance-attributes
                         amount=invoice.total,
                         remaining_amount=invoice.total,
                         account_id=invoice.payment_account_id).save()
+            # Add up the credit amount and update payment account table.
+            payment_account: PaymentAccountModel = PaymentAccountModel.find_by_id(invoice.payment_account_id)
+            payment_account.credit = (payment_account.credit if payment_account.credit else 0) + invoice.total
+            payment_account.save()
 
     @classmethod
     def _publish_to_mailer(cls, invoice: InvoiceModel):
